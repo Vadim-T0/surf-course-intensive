@@ -151,3 +151,45 @@ final mapAfter2010 = {
     ),
   ],
 };
+
+void main() {
+  
+Map<String, int> mapMachineresAge={}; // Словарь для возраста уникальной техники
+List<int> listMachineresAge; // Список с возрастом уникальной техники
+
+var currentYear = DateTime.now().year; // Текущий год
+
+// Собираем из двух словарей данные о возрасте техники в единый словарь, получаем словарь mapMachineresAge с возрастом техники без дубликатов.
+// Проходим словарь mapBefore2010
+for (var country in mapBefore2010.keys) {
+  var territories = mapBefore2010[country]!;
+  for (var territory in territories) {
+    for (var machinery in territory.machineries) {
+      mapMachineresAge[machinery.id]=currentYear-machinery.releaseDate.year;
+    }
+  }
+}
+
+// Проходим словарь mapAfter2010
+for (var country in mapAfter2010.keys) {
+  var territories = mapAfter2010[country]!;
+  for (var territory in territories) {
+    for (var machinery in territory.machineries) {
+      mapMachineresAge[machinery.id]=currentYear-machinery.releaseDate.year;
+    }
+  }
+}
+
+listMachineresAge = mapMachineresAge.values.toList();
+int totalMachineresAge = listMachineresAge.reduce((int previousValue, int element) => previousValue + element); // Общий возраст всей техники
+int averageMachineresAge = (totalMachineresAge / listMachineresAge.length).round(); // Средний возраст всей техники
+
+listMachineresAge.sort((int previousValue, int element) => element.compareTo(previousValue)); // Сортируем список по убыванию
+int numOldMachineres = listMachineresAge.length ~/ 2; // Определяем количество техники составляющей 50%
+List<int> listOldMachineresAge = listMachineresAge.sublist(0, numOldMachineres); // Выделяем в новый список возрастов наиболее старой техники
+int averageOldMachineresAge = (listOldMachineresAge.reduce((int previousValue, int element) => previousValue + element) / numOldMachineres).round(); // Средний возраст наиболее старой техники
+
+print('Средний возраст всей техники: $averageMachineresAge');
+print('Средний возраст самой старой техники: $averageOldMachineresAge');
+  
+}
