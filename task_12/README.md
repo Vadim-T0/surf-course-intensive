@@ -10,3 +10,7 @@
 
 https://github.com/Vadim-T0/surf-course-intensive/assets/80620155/fbb5ed97-0e16-4874-952a-b8d3c4479418
 
+## Demo 2
+
+https://github.com/Vadim-T0/surf-course-intensive/assets/80620155/b98005a1-0fbf-4acb-a1ec-9bd305ec5157
+
