@@ -1,6 +1,6 @@
 import 'package:task_12/domain/entity/product_entity.dart';
 
-/// Модель чека
+/// Модель чека.
 /// Содержит данные: номер, дата, список покупок для сортировки, список покупок оригинальный.
 class ChequeEntity {
   final int id;
