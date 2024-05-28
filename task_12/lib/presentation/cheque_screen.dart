@@ -5,6 +5,7 @@ import 'package:task_12/main.dart';
 import 'package:task_12/domain/entity/category_type.dart';
 import 'package:task_12/domain/entity/cheque_entity.dart';
 import 'package:task_12/domain/entity/sorting_type.dart';
+import 'package:task_12/domain/entity/product_entity.dart';
 import 'package:task_12/presentation/empty_screen.dart';
 import 'package:task_12/presentation/filter_screen.dart';
 import 'package:task_12/utils/extension/date_time_x.dart';
@@ -172,6 +173,8 @@ class _ContentWidgetState extends State<_ContentWidget> {
 
   /// Список продуктов с учетом метода сортировки.
   Widget _buildContent() {
+    List<ProductEntity> productsToDisplay;
+
     if (_currentFilter == SortingType.typeFromA ||
         _currentFilter == SortingType.typeFromZ) {
       /// Делаем список уникальных категорий отсортированных по текущему методу сортировки.
@@ -207,11 +210,15 @@ class _ContentWidgetState extends State<_ContentWidget> {
       );
     } else {
       /// Вывод списка продуктов без категорий.
+      productsToDisplay = _currentFilter == SortingType.none
+          ? widget.data.productsOrgignal
+          : widget.data.products;
+
       return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
         itemBuilder: (_, i) {
           return NoCategoryWidget(
-            products: widget.data.products,
+            products: productsToDisplay,
             filter: _currentFilter,
           );
         },
@@ -220,264 +227,6 @@ class _ContentWidgetState extends State<_ContentWidget> {
     }
   }
 }
-
-// /// Виджет для вывод списка продуктов из категории.
-// class _CategoryWidget extends StatelessWidget {
-//   /// Имя категории
-//   final String category;
-
-//   /// Список продуктов этой категории.
-//   final List<ProductEntity> productsOfCategory;
-
-//   /// Список продуктов для финансового виджета.
-//   final List<ProductEntity> products;
-
-//   /// Последния категория в выводе или нет.
-//   final bool isLastCat;
-
-//   const _CategoryWidget({
-//     required this.category,
-//     required this.productsOfCategory,
-//     required this.products,
-//     required this.isLastCat,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         /// Выводим название категории и ее продукты.
-//         Text(category),
-//         ...productsOfCategory.map((e) => ProductWidget(product: e)),
-//         if (!isLastCat)
-//           const Divider(
-//             color: AppColors.divider,
-//           ),
-
-//         /// Если категория последняя в выводе, то ниже выводим финансовый виджет.
-//         if (isLastCat)
-//           FinancialWidget(
-//             products: products,
-//           ),
-//       ],
-//     );
-//   }
-// }
-
-// /// Виджет для вывод списка продуктов без категорий.
-// class _NoCategoryWidget extends StatelessWidget {
-//   /// Список продуктов.
-//   final List<ProductEntity> products;
-
-//   /// Тип сортировки.
-//   final SortingType filter;
-
-//   const _NoCategoryWidget({
-//     required this.products,
-//     required this.filter,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       mainAxisSize: MainAxisSize.min,
-
-//       /// Выводим список отсортированных продуктов и финансовый виджет.
-//       children: [
-//         ...products.sortByFilter(filter).map((e) => ProductWidget(product: e)),
-//         FinancialWidget(
-//           products: products,
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// /// Виджет для вывода информации про продукту (изображение, название, объем, скидка, цена).
-// class _ProductWidget extends StatelessWidget {
-//   final ProductEntity product;
-
-//   const _ProductWidget({
-//     required this.product,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         const SizedBox(height: 16.0),
-//         SizedBox(
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               SizedBox(
-//                 width: 68,
-//                 height: 68,
-//                 child: ClipRRect(
-//                   borderRadius: BorderRadius.circular(8.0),
-//                   child: Image.network(
-//                     product.imageUrl,
-//                     fit: BoxFit.cover,
-//                     errorBuilder: (BuildContext context, Object exception,
-//                         StackTrace? stackTrace) {
-//                       return SvgPicture.asset(AppIcons.restraunt,
-//                           fit: BoxFit.cover);
-//                     },
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(width: 12.0),
-//               Expanded(
-//                   child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   SizedBox(
-//                     height: 32.0,
-//                     child: Text(
-//                       product.title,
-//                       style: AppStyle.textRegular12h16,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 16.0),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Text(
-//                         getAmount(product.amount),
-//                         style: AppStyle.textRegular12h20,
-//                       ),
-//                       Row(
-//                         children: [
-//                           if (product.sale > 0) ...[
-//                             Text(
-//                               product.decimalPrice.toFormattedCurrency(),
-//                               style: AppStyle.textRegular12h20Line,
-//                             ),
-//                             const SizedBox(width: 16),
-//                             Text(
-//                               calculateDiscountForProduct(
-//                                 product.decimalPrice,
-//                                 product.sale.toString(),
-//                               ).toFormattedCurrency(),
-//                               style: AppStyle.textBold12h20
-//                                   .copyWith(color: AppColors.red),
-//                             ),
-//                           ] else if (product.sale == 0) ...[
-//                             Text(
-//                               product.decimalPrice.toFormattedCurrency(),
-//                               style: AppStyle.textBold12h20,
-//                             ),
-//                           ]
-//                         ],
-//                       )
-//                     ],
-//                   )
-//                 ],
-//               ))
-//             ],
-//           ),
-//         ),
-//         const SizedBox(height: 16.0),
-//       ],
-//     );
-//   }
-// }
-
-// /// Финансовый виджет (итоговые суммы со скидкой и без).
-// class _FinancialWidget extends StatelessWidget {
-//   final List<ProductEntity> products;
-
-//   const _FinancialWidget({required this.products});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final fullTotal = getFullTotal(products);
-//     final discount = getDiscount(products);
-//     final total = fullTotal - discount;
-//     final discountPercent = calculateDiscountForAmount(fullTotal, discount);
-
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         const Divider(
-//           color: AppColors.divider,
-//         ),
-//         const SizedBox(height: 24.0),
-//         const Text(AppStrings.yourPurchase, style: AppStyle.textBold16h24),
-//         const SizedBox(height: 8.0),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               _plural(products.length),
-//               style: AppStyle.textRegular12h20,
-//             ),
-//             Text(
-//               fullTotal.toFormattedCurrency(),
-//               style: AppStyle.textBold12h20,
-//             )
-//           ],
-//         ),
-//         const SizedBox(height: 11.0),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               '${AppStrings.discount} $discountPercent%',
-//               style: AppStyle.textRegular12h20,
-//             ),
-//             Text(
-//               '-${discount.toFormattedCurrency()}',
-//               style: AppStyle.textBold12h20,
-//             )
-//           ],
-//         ),
-//         const SizedBox(height: 11.0),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             const Text(
-//               AppStrings.amount,
-//               style: AppStyle.textBold16h24,
-//             ),
-//             Text(
-//               total.toFormattedCurrency(),
-//               style: AppStyle.textBold16h24,
-//             )
-//           ],
-//         ),
-//         const SizedBox(height: 40.0),
-//       ],
-//     );
-//   }
-
-//   /// Склонение слова 'товар'
-//   String _plural(int count) {
-//     return Intl.plural(
-//       count,
-//       zero: 'Нет товаров',
-//       one: '$count товар',
-//       few: '$count товара',
-//       many: '$count товаров',
-//       other: '$count товара',
-//       locale: 'ru',
-//     );
-//   }
-// }
-
-// /// Виджет с индикатором загрузки.
-// class _LoadingWidget extends StatelessWidget {
-//   const _LoadingWidget();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(
-//       child: CircularProgressIndicator(),
-//     );
-//   }
-// }
 
 /// Виджет ошибки.
 class _ErrorWidget extends StatelessWidget {
