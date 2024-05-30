@@ -1,16 +1,16 @@
-# task_12
+## Description of your result
 
-A new Flutter project.
+Задание — Список покупок
 
-## Getting Started
+## Description
 
-This project is a starting point for a Flutter application.
+Функционал для приложения гипермаркета "Шестёрочка", который позволит пользователям хранить чеки и просматривать купленные товары, сгруппированные по категориям и отсортированные по цене.
 
-A few resources to get you started if this is your first Flutter project:
+## Demo
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+https://github.com/Vadim-T0/surf-course-intensive/assets/80620155/fbb5ed97-0e16-4874-952a-b8d3c4479418
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Demo 2
+
+https://github.com/Vadim-T0/surf-course-intensive/assets/80620155/b98005a1-0fbf-4acb-a1ec-9bd305ec5157
+
